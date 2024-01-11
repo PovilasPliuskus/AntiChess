@@ -2,9 +2,11 @@
 ifeq ($(OS), Windows_NT)
 	RM = del
 	EXECUTABLE_EXTENSION = .exe
+	MKDIR = mkdir
 else
 	RM = rm -f
 	EXECUTABLE_EXTENSION = 
+	MKDIR = mkdir -p
 endif
 
 # Compiler settings
@@ -18,12 +20,16 @@ EXECUTABLE = program$(EXECUTABLE_EXTENSION)
 OBJ_DIR = obj
 
 # Main target
-$(EXECUTABLE): $(OBJ_DIR)/main.o
-	g++ -std=c++17 $(OBJ_DIR)/main.o -o $(EXECUTABLE)
+$(EXECUTABLE): $(OBJ_DIR)/main.o | $(OBJ_DIR)
+	$(CXX) $(CXXFLAGS) $(OBJ_DIR)/main.o -o $(EXECUTABLE)
 
 # Rule for creating main.o
-$(OBJ_DIR)/main.o: main.cpp
+$(OBJ_DIR)/main.o: main.cpp | $(OBJ_DIR)
 	$(CXX) -c $(CXXFLAGS) $< -o $@
+
+# Create obj/ directory if it doesn't exist
+$(OBJ_DIR):
+	$(MKDIR) $(OBJ_DIR)
 
 # Clean target
 clean:
