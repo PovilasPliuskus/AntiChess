@@ -1,5 +1,18 @@
+# Determine the operating system
+ifeq ($(OS), Windows_NT)
+	RM = del
+	EXECUTABLE_EXTENSION = .exe
+else
+	RM = rm -f
+	EXECUTABLE_EXTENSION = 
+endif
+
+# Compiler settings
+CXX = g++
+CXXFLAGS = -std=c++17
+
 # Executable file
-EXECUTABLE = program.exe
+EXECUTABLE = program$(EXECUTABLE_EXTENSION)
 
 # Directory structure
 OBJ_DIR = obj
@@ -10,8 +23,8 @@ $(EXECUTABLE): $(OBJ_DIR)/main.o
 
 # Rule for creating main.o
 $(OBJ_DIR)/main.o: main.cpp
-	g++ -c $< -o $@
+	$(CXX) -c $(CXXFLAGS) $< -o $@
 
 # Clean target
 clean:
-	del $(OBJ_DIR)\*.o $(EXECUTABLE)
+	$(RM) $(OBJ_DIR)\*.o $(EXECUTABLE)
